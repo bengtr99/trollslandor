@@ -30,3 +30,6 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# Playwright MCP browser output (screenshots, snapshots, console logs)
+.playwright-mcp/
