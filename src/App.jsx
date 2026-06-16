@@ -14,12 +14,23 @@ const SpeechRecognitionApi = typeof window !== "undefined"
 
 // Human-readable heading for each report view (shared by the on-screen title
 // and the PDF export).
+// SLU stores vernacular species names in lower case; show them with an upper
+// case first letter (matching the dropdown labels) wherever they are displayed.
+const capitalizeFirst = (value) => {
+  const str = String(value ?? "");
+  return str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+};
+// Cell value for the result tables: capitalise the species column, pass others
+// through unchanged.
+const speciesAwareCell = (row, key) => (key === "species" ? capitalizeFirst(row[key]) : row[key]);
+
 const labelForViewMode = (mode) =>
   mode === "graf" ? "Tid per år"
     : mode === "tid" ? "Tid"
     : mode === "fenologi" ? "Fenologi"
     : mode === "landskap" ? "Landskap"
     : mode === "kommun" ? "Kommun"
+    : mode === "arter" ? "Arter"
     : mode === "karta" ? "Karta"
     : "Resultat";
 
@@ -970,6 +981,7 @@ export default function TrollslandeApp() {
         else if (normalizedValue.includes("kommun")) reportCommand = { mode: "kommun", label: "Kommun" };
         else if (normalizedValue.includes("landskap")) reportCommand = { mode: "landskap", label: "Landskap" };
         else if (normalizedValue.includes("karta")) reportCommand = { mode: "karta", label: "Karta" };
+        else if (normalizedValue.includes("arter")) reportCommand = { mode: "arter", label: "Arter" };
         if (reportCommand) changed.push(`Rapport = ${reportCommand.label}`);
       }
     }
@@ -1030,7 +1042,7 @@ export default function TrollslandeApp() {
       ? ["Art", "Datum", "Landskap", "Kommun", "Fyndplats", "Antal", "Ålder/stadium", "Aktivitet", "Observatör"]
       : ["Datum", "Landskap", "Kommun", "Fyndplats", "Antal", "Ålder/stadium", "Aktivitet", "Observatör"];
     const body = rowsArg.map((row) => includeSpeciesColumn
-      ? [row.species, row.date, row.province, row.municipality, row.locality, row.quantity, row.lifeStage, row.activity, row.recordedBy]
+      ? [capitalizeFirst(row.species), row.date, row.province, row.municipality, row.locality, row.quantity, row.lifeStage, row.activity, row.recordedBy]
       : [row.date, row.province, row.municipality, row.locality, row.quantity, row.lifeStage, row.activity, row.recordedBy]);
     const worksheet = XLSX.utils.aoa_to_sheet([header, ...body]);
     const workbook = XLSX.utils.book_new();
@@ -1294,6 +1306,13 @@ export default function TrollslandeApp() {
     return Array.from(counts.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
   }, [results, viewMode]);
 
+  const speciesSeries = useMemo(() => {
+    if (viewMode !== "arter" || results.length === 0) return [];
+    const counts = new Map();
+    results.forEach((row) => counts.set(row.species || "—", (counts.get(row.species || "—") || 0) + 1));
+    return Array.from(counts.entries()).map(([name, count]) => ({ name: capitalizeFirst(name), count })).sort((a, b) => b.count - a.count);
+  }, [results, viewMode]);
+
   const activeChartBlocks = viewMode === "graf" ? chartBlocksByYear : viewMode === "tid" ? chartBlocksCombined : [];
 
   const yStep = useMemo(() => {
@@ -1369,11 +1388,11 @@ export default function TrollslandeApp() {
   const barGap = 4;
   const barWidth = 26;
 
-  const horizontalSeries = viewMode === "landskap" ? landscapeSeries : municipalitySeries;
+  const horizontalSeries = viewMode === "landskap" ? landscapeSeries : viewMode === "arter" ? speciesSeries : municipalitySeries;
   const horizontalMax = horizontalSeries.length ? Math.max(...horizontalSeries.map((d) => d.count), 1) : 1;
   const horizontalChartWidth = 980;
   const horizontalChartHeight = Math.max(280, horizontalSeries.length * 32 + 80);
-  const horizontalLeft = 180;
+  const horizontalLeft = viewMode === "arter" ? 280 : 180;
   const horizontalTop = 20;
   const horizontalRight = 40;
   const horizontalPlotWidth = horizontalChartWidth - horizontalLeft - horizontalRight;
@@ -1426,7 +1445,7 @@ export default function TrollslandeApp() {
     viewMode === "lista" ? results.length > 0
       : viewMode === "fenologi" ? phenologyResults.length > 0
       : (viewMode === "graf" || viewMode === "tid") ? activeChartBlocks.length > 0
-      : (viewMode === "landskap" || viewMode === "kommun") ? horizontalSeries.length > 0
+      : (viewMode === "landskap" || viewMode === "kommun" || viewMode === "arter") ? horizontalSeries.length > 0
       : viewMode === "karta" ? mapPoints.length > 0
       : false;
   const exportIsExcel = viewMode === "lista";
@@ -1553,6 +1572,7 @@ export default function TrollslandeApp() {
               </div>
               <div style={styles.rowButtonsThird}>
                 <button onClick={() => runView("fenologi", "Fenologi", buildCurrentConfig())} style={{ ...styles.secondaryButton, gridColumn: 1, gridRow: 1 }}>Fenologi</button>
+                <button onClick={() => runView("arter", "Arter", buildCurrentConfig())} disabled={!isMultiSpeciesSelection} style={isMultiSpeciesSelection ? { ...styles.secondaryButton, gridColumn: 1, gridRow: 2 } : { ...styles.secondaryButton, ...styles.disabledButton, gridColumn: 1, gridRow: 2 }}>Arter</button>
                 <button onClick={updateLocalDb} disabled={localDbInfo.inProgress || !localDbInfo.exists} style={{ gridColumn: 2, gridRow: 1, ...((localDbInfo.inProgress || !localDbInfo.exists) ? { ...styles.secondaryButton, ...styles.disabledButton } : { ...styles.secondaryButton, background: "#16a34a", borderColor: "#16a34a", color: "white" }) }}>Uppdatera databas</button>
                 <button onClick={createLocalDb} disabled={localDbInfo.inProgress} style={{ gridColumn: 2, gridRow: 2, ...(localDbInfo.inProgress ? { ...styles.secondaryButton, ...styles.disabledButton, background: "#fca5a5", borderColor: "#dc2626" } : { ...styles.secondaryButton, background: "#dc2626", borderColor: "#dc2626" }) }}>Skapa lokal databas</button>
               </div>
@@ -1580,7 +1600,7 @@ export default function TrollslandeApp() {
                   {results.length === 0 ? <div style={styles.empty}>Ingen lista skapad ännu.</div> : (
                     <table style={styles.table}>
                       <thead><tr>{columns.map((column) => <th key={column.key} style={{ ...styles.th, width: column.width }} onClick={() => handleSort(column.key)}>{column.label}{sortField === column.key ? (sortDirection === "asc" ? " ▲" : " ▼") : ""}</th>)}</tr></thead>
-                      <tbody>{results.map((row) => <tr key={row.occurrenceId || `${row.species}-${row.date}-${row.municipality}-${row.locality}`}>{columns.map((column) => <td key={column.key} style={{ ...styles.td, width: column.width }} title={row[column.key] || ""}>{row[column.key] || "—"}</td>)}</tr>)}</tbody>
+                      <tbody>{results.map((row) => <tr key={row.occurrenceId || `${row.species}-${row.date}-${row.municipality}-${row.locality}`}>{columns.map((column) => <td key={column.key} style={{ ...styles.td, width: column.width }} title={speciesAwareCell(row, column.key) || ""}>{speciesAwareCell(row, column.key) || "—"}</td>)}</tr>)}</tbody>
                     </table>
                   )}
                 </div>
@@ -1595,13 +1615,13 @@ export default function TrollslandeApp() {
                         <tr><td colSpan={columns.length} style={styles.phenologyMarkerCell}>Tidigast</td></tr>
                         {phenologyResults.filter((row) => row.__phenologySection === "tidigast").map((row) => (
                           <tr key={row.occurrenceId || `${row.species}-${row.date}-${row.municipality}-${row.locality}-tidigast`}>
-                            {columns.map((column) => <td key={column.key} style={{ ...styles.td, width: column.width }} title={row[column.key] || ""}>{row[column.key] || "—"}</td>)}
+                            {columns.map((column) => <td key={column.key} style={{ ...styles.td, width: column.width }} title={speciesAwareCell(row, column.key) || ""}>{speciesAwareCell(row, column.key) || "—"}</td>)}
                           </tr>
                         ))}
                         <tr><td colSpan={columns.length} style={styles.phenologyMarkerCell}>Senast</td></tr>
                         {phenologyResults.filter((row) => row.__phenologySection === "senast").map((row) => (
                           <tr key={row.occurrenceId || `${row.species}-${row.date}-${row.municipality}-${row.locality}-senast`}>
-                            {columns.map((column) => <td key={column.key} style={{ ...styles.td, width: column.width }} title={row[column.key] || ""}>{row[column.key] || "—"}</td>)}
+                            {columns.map((column) => <td key={column.key} style={{ ...styles.td, width: column.width }} title={speciesAwareCell(row, column.key) || ""}>{speciesAwareCell(row, column.key) || "—"}</td>)}
                           </tr>
                         ))}
                       </tbody>
@@ -1639,7 +1659,7 @@ export default function TrollslandeApp() {
                   </svg>
                 )}
               </div>
-            ) : viewMode === "landskap" || viewMode === "kommun" ? (
+            ) : viewMode === "landskap" || viewMode === "kommun" || viewMode === "arter" ? (
               <div style={styles.chartWrap}>
                 {horizontalSeries.length === 0 ? <div style={styles.empty}>Ingen graf skapad ännu.</div> : (
                   <svg viewBox={`0 0 ${horizontalChartWidth} ${horizontalChartHeight}`} style={styles.chartSvg}>
