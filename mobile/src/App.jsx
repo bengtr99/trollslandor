@@ -152,35 +152,35 @@ export default function TrollslandeApp() {
   const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 
   const styles = {
-    page: { minHeight: "100vh", background: "#eef2f7", padding: 12, fontFamily: "Arial, Helvetica, sans-serif", color: "#1f2937" },
-    shell: { maxWidth: 820, margin: "0 auto", background: "#f8fafc", borderRadius: 16, padding: 10, boxShadow: "0 10px 30px rgba(0,0,0,0.08)" },
-    topBar: { display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center", marginBottom: 16 },
+    page: { minHeight: "100vh", background: "#eef2f7", padding: 6, fontFamily: "Arial, Helvetica, sans-serif", color: "#1f2937" },
+    shell: { maxWidth: 820, margin: "0 auto", background: "#f8fafc", borderRadius: 14, padding: 8, boxShadow: "0 10px 30px rgba(0,0,0,0.08)" },
+    topBar: { display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", marginBottom: 6 },
     status: { background: "white", borderRadius: 14, padding: "8px 12px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", fontSize: 13, flex: 1, minWidth: 0 },
     loadingBanner: { background: "#f59e0b", color: "#1f2937", fontWeight: 700, textAlign: "center", padding: "12px 14px", borderRadius: 12, marginBottom: 10, fontSize: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.12)" },
     columns: { display: "block" },
-    leftCard: { background: "#dbeafe", borderRadius: 20, padding: 12, boxShadow: "0 2px 10px rgba(0,0,0,0.06)" },
+    leftCard: { background: "#dbeafe", borderRadius: 14, padding: 8, boxShadow: "0 2px 10px rgba(0,0,0,0.06)" },
     rightCard: { background: "#dcfce7", borderRadius: 20, padding: 16, boxShadow: "0 2px 10px rgba(0,0,0,0.06)", minWidth: 0 },
-    section: { marginBottom: 10, textAlign: "left" },
-    label: { display: "block", marginBottom: 4, fontSize: 13, fontWeight: 700 },
-    select: { width: "100%", padding: "11px 12px", borderRadius: 12, border: "1px solid #93c5fd", background: "white", fontSize: 16, boxSizing: "border-box" },
-    input: { width: "100%", padding: "11px 12px", borderRadius: 12, border: "1px solid #93c5fd", background: "white", fontSize: 16, boxSizing: "border-box" },
+    section: { marginBottom: 6, textAlign: "left" },
+    label: { display: "block", marginBottom: 2, fontSize: 13, fontWeight: 700 },
+    select: { width: "100%", padding: "6px 12px", borderRadius: 12, border: "1px solid #93c5fd", background: "white", fontSize: 16, boxSizing: "border-box" },
+    input: { width: "100%", padding: "6px 12px", borderRadius: 12, border: "1px solid #93c5fd", background: "white", fontSize: 16, boxSizing: "border-box" },
     checkboxRow: { display: "flex", alignItems: "center", gap: 8, marginTop: 6, fontSize: 13 },
     smallButton: { padding: "10px 12px", borderRadius: 12, border: "1px solid #cbd5e1", background: "white", cursor: "pointer", fontSize: 14 },
     disabledButton: { background: "#e5e7eb", color: "#9ca3af", borderColor: "#d1d5db", cursor: "not-allowed" },
-    tagBox: { minHeight: 40, borderRadius: 12, border: "1px solid #93c5fd", background: "#eff6ff", padding: 8, fontSize: 14, boxSizing: "border-box" },
+    tagBox: { minHeight: 26, borderRadius: 12, border: "1px solid #93c5fd", background: "#eff6ff", padding: "4px 8px", fontSize: 14, boxSizing: "border-box" },
     tag: { borderRadius: 999, background: "#0f172a", color: "white", padding: "6px 10px", border: "none", cursor: "pointer", fontSize: 12 },
     rowButtonsTop: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 },
-    rowButtonsBottom: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginTop: 8 },
+    rowButtonsBottom: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginTop: 6 },
     rowButtonsThird: { display: "grid", gridTemplateColumns: "1fr 2fr", gap: 6, marginTop: 8 },
     phenologyMarkerCell: { padding: "10px 8px", fontSize: 14, fontWeight: 700, background: "#f0fdf4", borderBottom: "1px solid #dcfce7" },
-    primaryButton: { width: "100%", padding: "12px 10px", borderRadius: 12, borderWidth: 1, borderStyle: "solid", borderColor: "#0f172a", background: "#0f172a", color: "white", fontSize: 15, fontWeight: 700, cursor: "pointer" },
-    secondaryButton: { width: "100%", padding: "12px 10px", borderRadius: 12, borderWidth: 1, borderStyle: "solid", borderColor: "#0f172a", background: "#0f172a", color: "white", fontSize: 15, fontWeight: 700, cursor: "pointer" },
+    primaryButton: { width: "100%", padding: "7px 10px", borderRadius: 12, borderWidth: 1, borderStyle: "solid", borderColor: "#0f172a", background: "#0f172a", color: "white", fontSize: 15, fontWeight: 700, cursor: "pointer" },
+    secondaryButton: { width: "100%", padding: "7px 10px", borderRadius: 12, borderWidth: 1, borderStyle: "solid", borderColor: "#0f172a", background: "#0f172a", color: "white", fontSize: 15, fontWeight: 700, cursor: "pointer" },
     headerLine: { display: "grid", gridTemplateColumns: "1fr auto auto", alignItems: "start", gap: 16, paddingBottom: 12, borderBottom: "1px solid #bbf7d0", marginBottom: 12 },
     reportHeader: { display: "flex", alignItems: "center", gap: 10, paddingBottom: 10, borderBottom: "1px solid #bbf7d0", marginBottom: 10 },
     backButton: { padding: "12px 16px", borderRadius: 10, border: "none", background: "#0f172a", color: "white", fontWeight: 700, fontSize: 15, cursor: "pointer", whiteSpace: "nowrap" },
     reportTitleWrap: { flex: 1, minWidth: 0 },
     rotateHint: { textAlign: "center", fontSize: 13, color: "#475569", background: "#fff", borderRadius: 10, padding: "6px 10px", marginBottom: 8 },
-    micBar: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 12, padding: "10px 12px", marginBottom: 10, fontSize: 13, color: "#1e3a8a", cursor: "pointer" },
+    micBar: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 12, padding: "6px 10px", marginBottom: 6, fontSize: 13, color: "#1e3a8a", cursor: "pointer" },
     micHeard: { color: "#475569", fontStyle: "italic", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1, textAlign: "right" },
     helperText: { fontSize: 14, color: "#1f2937", textAlign: "center", whiteSpace: "pre-line", lineHeight: 1.25, paddingTop: 4 },
     exportDisabled: { background: "#e5e7eb", color: "#9ca3af", border: "1px solid #d1d5db", cursor: "not-allowed" },
@@ -937,20 +937,11 @@ export default function TrollslandeApp() {
     recognition.continuous = true;
     recognition.interimResults = false;
 
-    let startedAt = 0;
-    recognition.onstart = () => { startedAt = Date.now(); setVoiceListening(true); };
+    recognition.onstart = () => setVoiceListening(true);
     recognition.onend = () => {
+      // Do NOT auto-restart: on phones each restart triggers an OS chime and a
+      // flicker between states. The user taps the mic bar to listen again.
       setVoiceListening(false);
-      const ranMs = Date.now() - startedAt;
-      // Only auto-restart if the session actually ran a while. If it ends almost
-      // immediately, stop (otherwise the recogniser flickers in a tight loop) and
-      // let the user tap the mic bar to try again.
-      if (shouldRestartRef.current && ranMs > 1500) {
-        window.setTimeout(() => { try { recognition.start(); } catch (_) { /* ignore */ } }, 400);
-      } else if (shouldRestartRef.current) {
-        shouldRestartRef.current = false;
-        setStatusText('Mikrofonen stoppade. Tryck på mikrofon-raden och säg t.ex. "Rapport Tid".');
-      }
     };
     recognition.onerror = (event) => {
       setVoiceListening(false);
@@ -992,21 +983,6 @@ export default function TrollslandeApp() {
     };
   }, []);
 
-  // Start/stop listening when the microphone toggle changes.
-  useEffect(() => {
-    if (!recognitionRef.current) return;
-    shouldRestartRef.current = voiceEnabled;
-
-    if (voiceEnabled) {
-      try {
-        recognitionRef.current.start();
-        setStatusText("Mikrofonläge aktivt. Väntar på röstkommando.");
-      } catch (_) { /* ignore if already started */ }
-    } else {
-      try { recognitionRef.current.stop(); } catch (_) { /* ignore */ }
-      setVoiceListening(false);
-    }
-  }, [voiceEnabled]);
 
   const getQuarterBoundaries = (year, monthIndex) => {
     const days = new Date(year, monthIndex + 1, 0).getDate();
@@ -1265,7 +1241,7 @@ export default function TrollslandeApp() {
 
         {SpeechRecognitionApi ? (
           <div style={styles.micBar} onClick={startMic}>
-            <span style={{ fontWeight: 700, whiteSpace: "nowrap" }}>{voiceListening ? "🎤 Lyssnar…" : "🎤 Tryck för att aktivera"}</span>
+            <span style={{ fontWeight: 700, whiteSpace: "nowrap" }}>{voiceListening ? "🎤 Lyssnar – prata nu" : "🎤 Tryck och prata"}</span>
             <span style={styles.micHeard}>{lastHeard && lastHeard !== "-" ? `Hörde: "${lastHeard}"` : 'Säg t.ex. "Rapport Tid"'}</span>
           </div>
         ) : (
@@ -1340,7 +1316,7 @@ export default function TrollslandeApp() {
                 <button onClick={() => runView("kommun", "Kommun", buildCurrentConfig())} disabled={!municipalityGraphEnabled} style={!municipalityGraphEnabled ? { ...styles.secondaryButton, ...styles.disabledButton } : styles.secondaryButton}>Kommun</button>
                 <button onClick={() => runView("karta", "Karta", buildCurrentConfig())} style={styles.secondaryButton}>Karta</button>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 8 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 6 }}>
                 <button onClick={() => runView("fenologi", "Fenologi", buildCurrentConfig())} style={styles.secondaryButton}>Fenologi</button>
                 <button onClick={() => runView("arter", "Arter", buildCurrentConfig())} disabled={!isMultiSpeciesSelection} style={!isMultiSpeciesSelection ? { ...styles.secondaryButton, ...styles.disabledButton } : styles.secondaryButton}>Arter</button>
               </div>
